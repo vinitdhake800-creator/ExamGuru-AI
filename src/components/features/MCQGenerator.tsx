@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Loader2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 
 import { generateMCQs } from "@/lib/exam.functions";
+import { saveMCQSet } from "@/lib/history.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,6 +39,7 @@ const SUBJECTS = [
 
 export function MCQGenerator() {
   const run = useServerFn(generateMCQs);
+  const save = useServerFn(saveMCQSet);
   const [exam, setExam] = useState("UPSC");
   const [subject, setSubject] = useState("Polity");
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Medium");
@@ -56,7 +58,11 @@ export function MCQGenerator() {
     setRevealed(false);
     try {
       const res = await run({ data: { exam, subject, difficulty, count } });
-      setQuestions(res.questions ?? []);
+      const qs = res.questions ?? [];
+      setQuestions(qs);
+      if (qs.length) {
+        save({ data: { exam, subject, difficulty, questions: qs } }).catch(() => {});
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to generate questions.");
     } finally {

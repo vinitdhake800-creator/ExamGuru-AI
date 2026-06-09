@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Send, Bot, User, Loader2 } from "lucide-react";
 
 import { chatWithTutor } from "@/lib/exam.functions";
+import { ensureChatSession, saveChatMessages } from "@/lib/history.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Markdown } from "@/components/Markdown";
@@ -22,6 +23,9 @@ const SUGGESTIONS = [
 
 export function ChatAssistant() {
   const send = useServerFn(chatWithTutor);
+  const ensure = useServerFn(ensureChatSession);
+  const saveMsgs = useServerFn(saveChatMessages);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,13 +43,22 @@ export function ChatAssistant() {
   async function handleSend(text?: string) {
     const content = (text ?? input).trim();
     if (!content || loading) return;
-    const next: Msg[] = [...messages, { role: "user", content }];
+    const userMsg: Msg = { role: "user", content };
+    const next: Msg[] = [...messages, userMsg];
     setMessages(next);
     setInput("");
     setLoading(true);
     try {
+      let sid = sessionId;
+      if (!sid) {
+        const created = await ensure({ data: { title: content.slice(0, 60) } });
+        sid = created.id;
+        setSessionId(sid);
+      }
       const res = await send({ data: { messages: next } });
-      setMessages([...next, { role: "assistant", content: res.content }]);
+      const assistantMsg: Msg = { role: "assistant", content: res.content };
+      setMessages([...next, assistantMsg]);
+      saveMsgs({ data: { sessionId: sid, messages: [userMsg, assistantMsg] } }).catch(() => {});
     } catch (e) {
       setMessages([
         ...next,
