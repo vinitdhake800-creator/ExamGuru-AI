@@ -78,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "ExamGuru AI" },
+      { name: "description", content: "ExamGuru AI is a modern educational platform that leverages AI to help students prepare for competitive exams." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "ExamGuru AI" },
+      { property: "og:description", content: "ExamGuru AI is a modern educational platform that leverages AI to help students prepare for competitive exams." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "ExamGuru AI" },
+      { name: "twitter:description", content: "ExamGuru AI is a modern educational platform that leverages AI to help students prepare for competitive exams." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/00rCKAye6FZangrTdEE0Qn7B2lr1/social-images/social-1781017620891-images.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/00rCKAye6FZangrTdEE0Qn7B2lr1/social-images/social-1781017620891-images.webp" },
     ],
     links: [
       {
