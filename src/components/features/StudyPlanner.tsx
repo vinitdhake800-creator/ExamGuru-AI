@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Loader2, CalendarRange } from "lucide-react";
 
 import { generateStudyPlan } from "@/lib/exam.functions";
+import { saveStudyPlan } from "@/lib/history.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import { Markdown } from "@/components/Markdown";
 
 export function StudyPlanner() {
   const run = useServerFn(generateStudyPlan);
+  const save = useServerFn(saveStudyPlan);
   const [exam, setExam] = useState("UPSC Prelims");
   const [hours, setHours] = useState(4);
   const [weeks, setWeeks] = useState(8);
@@ -26,6 +28,7 @@ export function StudyPlanner() {
         data: { exam, hoursPerDay: hours, durationWeeks: weeks },
       });
       setPlan(res.content);
+      save({ data: { exam, hoursPerDay: hours, durationWeeks: weeks, content: res.content } }).catch(() => {});
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to generate plan.");
     } finally {

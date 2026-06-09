@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Loader2, BrainCircuit } from "lucide-react";
 
 import { solveQuestion } from "@/lib/exam.functions";
+import { saveSolvedQuestion } from "@/lib/history.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import { Markdown } from "@/components/Markdown";
 
 export function QuestionSolver() {
   const run = useServerFn(solveQuestion);
+  const save = useServerFn(saveSolvedQuestion);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +23,10 @@ export function QuestionSolver() {
     setError(null);
     setAnswer(null);
     try {
-      const res = await run({ data: { question: question.trim() } });
+      const q = question.trim();
+      const res = await run({ data: { question: q } });
       setAnswer(res.content);
+      save({ data: { question: q, answer: res.content } }).catch(() => {});
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to solve question.");
     } finally {
