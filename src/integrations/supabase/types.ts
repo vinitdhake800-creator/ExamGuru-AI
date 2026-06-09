@@ -14,7 +14,179 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "chat_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mcq_sets: {
+        Row: {
+          created_at: string
+          difficulty: string
+          exam: string
+          id: string
+          question_count: number
+          questions: Json
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty: string
+          exam: string
+          id?: string
+          question_count: number
+          questions: Json
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          exam?: string
+          id?: string
+          question_count?: number
+          questions?: Json
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          target_exam: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          target_exam?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          target_exam?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      solved_questions: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          question: string
+          user_id: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          question: string
+          user_id: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          question?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_plans: {
+        Row: {
+          content: string
+          created_at: string
+          duration_weeks: number
+          exam: string
+          hours_per_day: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          duration_weeks: number
+          exam: string
+          hours_per_day: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          duration_weeks?: number
+          exam?: string
+          hours_per_day?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
